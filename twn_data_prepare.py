@@ -77,7 +77,8 @@ def filter_df(df,i):
 #    df = df.sort_values(by="dfVar", ascending=False)
 #    df= df.drop(columns = ["dfVar"])
     return(df)
-    
+
+#filter by count > 6 and TPM > 6 in at least 15 samples    
 def filter_gene(geneCount, geneTPM, t= "gene"):
     gcSum=(geneCount > 6).sum(axis=1).to_frame()
     gtSum=(geneTPM > 1).sum(axis=1).to_frame()
@@ -174,7 +175,10 @@ TG_isoRatio =isoRatio[['OIH_M1_TG', 'OIH_M2_TG', 'OIH_M3_TG', 'OIH_M4_TG', 'OIH_
 TG_isoRatio.columns = TG_isoTPM.columns
 TG_isoRatio["gene_id"]= isoRatio.gene_id
 TG_isoRatio = TG_isoRatio.loc[TG_iso]
+
 #n_sample =20 
+#Filter all the isoform of a gene with main isoform ratio > 95%
+#The isoform with the lowest ratio is excluded to resolve the dependency among isoform ratio patterns within a gene
 def IR_filter(IR, n_sample):
     df = pd.DataFrame(columns=IR.columns.tolist())
     IR["Mean"] = IR.iloc[:, 0:n_sample].mean(axis=1)
